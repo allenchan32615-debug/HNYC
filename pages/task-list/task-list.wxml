@@ -1,0 +1,105 @@
+<view class="container">
+  <!-- 筛选和排序 -->
+  <view class="filter-bar card">
+    <view class="filter-tabs">
+      <view class="tab-item {{currentFilter === 'all' ? 'active' : ''}}" bindtap="setFilter" data-type="all">全部</view>
+      <view class="tab-item {{currentFilter === 'pending' ? 'active' : ''}}" bindtap="setFilter" data-type="pending">待完成</view>
+      <view class="tab-item {{currentFilter === 'completed' ? 'active' : ''}}" bindtap="setFilter" data-type="completed">已完成</view>
+    </view>
+    <view class="sort-btn" bindtap="showSortMenu">
+      <text>排序</text>
+      <text class="sort-icon">▼</text>
+    </view>
+  </view>
+
+  <!-- 任务统计 -->
+  <view class="stats-card card">
+    <view class="stats-header flex-between">
+      <view class="stats-title">任务统计</view>
+      <view class="stats-date text-hint">{{currentDate}}</view>
+    </view>
+    <view class="stats-grid grid-4 mt-24">
+      <view class="stats-item text-center">
+        <view class="stats-value text-bold text-blue">{{stats.total}}</view>
+        <view class="stats-label text-hint">总任务</view>
+      </view>
+      <view class="stats-item text-center">
+        <view class="stats-value text-bold text-orange">{{stats.pending}}</view>
+        <view class="stats-label text-hint">待完成</view>
+      </view>
+      <view class="stats-item text-center">
+        <view class="stats-value text-bold text-green">{{stats.completed}}</view>
+        <view class="stats-label text-hint">已完成</view>
+      </view>
+      <view class="stats-item text-center">
+        <view class="stats-value text-bold text-red">{{stats.today}}</view>
+        <view class="stats-label text-hint">今日</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 任务列表 -->
+  <view class="tasks-section">
+    <view class="tasks-list">
+      <view class="task-card card" wx:for="{{tasks}}" wx:key="_id">
+        <view class="task-header flex">
+          <view class="task-icon-wrapper {{item.isCompleted ? 'completed' : ''}}">
+            <image class="task-icon" src="{{getTaskTypeIcon(item.type)}}" mode="aspectFit" />
+          </view>
+          <view class="task-info flex-1" bindtap="toggleTask" data-id="{{item._id}}">
+            <view class="task-title {{item.isCompleted ? 'completed' : ''}}">{{item.title}}</view>
+            <view class="task-meta text-hint mt-8">
+              <text>{{item.petName}}</text>
+              <text class="mx-8">•</text>
+              <text>{{getTaskTypeText(item.type)}}</text>
+              <text class="mx-8">•</text>
+              <text style="color: {{getPriorityColor(item.priority)}}">{{getPriorityText(item.priority)}}</text>
+            </view>
+          </view>
+          <view class="task-action">
+            <switch checked="{{item.isCompleted}}" disabled color="#4CAF50" />
+          </view>
+        </view>
+
+        <!-- 任务详情 -->
+        <view class="task-details" wx:if="{{item.description}}">
+          <view class="task-desc text-hint">{{item.description}}</view>
+        </view>
+
+        <!-- 任务时间 -->
+        <view class="task-footer flex-between mt-16 pt-16">
+          <view class="task-time text-hint">
+            <text>⏰ {{item.schedule.time}}</text>
+            <text class="ml-16">{{getScheduleText(item.schedule)}}</text>
+          </view>
+          <view class="task-actions flex">
+            <view class="action-btn" bindtap="editTask" data-id="{{item._id}}">
+              <text>✏️</text>
+            </view>
+            <view class="action-btn" bindtap="deleteTask" data-id="{{item._id}}">
+              <text>🗑</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 完成标记 -->
+        <view class="completed-badge" wx:if="{{item.isCompleted}}">
+          <text>✓ 已完成</text>
+        </view>
+      </view>
+
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{tasks.length === 0}}">
+        <image src="/images/empty-tasks.png" mode="aspectFit" />
+        <view class="empty-text">暂无任务</view>
+        <view class="empty-desc">创建任务来提醒照顾植宠吧</view>
+        <button class="btn-primary mt-24" bindtap="addTask">创建任务</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 添加按钮 -->
+  <view class="fab-btn" bindtap="addTask">
+    <text>+</text>
+  </view>
+</view>

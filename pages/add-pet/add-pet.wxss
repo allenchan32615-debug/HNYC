@@ -1,0 +1,285 @@
+/* 添加植宠页面样式 */
+
+.form-card {
+  padding: 32rpx;
+}
+
+.form-section {
+  margin-bottom: 48rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 24rpx;
+  padding-left: 16rpx;
+  border-left: 4rpx solid var(--primary-green);
+}
+
+.form-item {
+  margin-bottom: 32rpx;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  margin-bottom: 16rpx;
+}
+
+.form-label.required::before {
+  content: '*';
+  color: #F44336;
+  margin-right: 4rpx;
+}
+
+.form-tip {
+  font-size: 24rpx;
+  color: var(--text-hint);
+  margin-top: 8rpx;
+}
+
+/* 图片上传 */
+.image-uploader {
+  display: flex;
+  align-items: center;
+}
+
+.image-preview {
+  position: relative;
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  background: var(--bg-color);
+}
+
+.image-preview image {
+  width: 100%;
+  height: 100%;
+}
+
+.image-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 40rpx;
+}
+
+.image-upload-btn {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 12rpx;
+  border: 2rpx dashed var(--border-color);
+  background: var(--bg-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-icon {
+  font-size: 60rpx;
+  color: var(--text-hint);
+  margin-bottom: 8rpx;
+}
+
+.upload-text {
+  font-size: 24rpx;
+  color: var(--text-hint);
+}
+
+/* 图片网格 */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx;
+}
+
+.image-item {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 12rpx;
+  overflow: hidden;
+  background: var(--bg-color);
+}
+
+.image-item image {
+  width: 100%;
+  height: 100%;
+}
+
+.image-delete {
+  position: absolute;
+  top: 8rpx;
+  right: 8rpx;
+  width: 48rpx;
+  height: 48rpx;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 28rpx;
+}
+
+.image-add-btn {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 12rpx;
+  border: 2rpx dashed var(--border-color);
+  background: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-icon {
+  font-size: 48rpx;
+  color: var(--text-hint);
+}
+
+/* 类型选择 */
+.type-selector {
+  background: var(--bg-color);
+  border-radius: 12rpx;
+  padding: 24rpx;
+}
+
+.type-main {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.type-option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24rpx;
+  background: #ffffff;
+  border-radius: 12rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.3s;
+}
+
+.type-option.active {
+  border-color: var(--primary-green);
+  background: rgba(76, 175, 80, 0.05);
+}
+
+.type-option text:first-child {
+  font-size: 48rpx;
+  margin-bottom: 12rpx;
+}
+
+.type-option text:last-child {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+.type-sub {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx;
+}
+
+/* 日期选择器 */
+.picker {
+  padding: 20rpx 24rpx;
+  background: #ffffff;
+  border: 2rpx solid var(--border-color);
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: var(--text-primary);
+}
+
+.picker.placeholder {
+  color: var(--text-hint);
+}
+
+/* 提醒列表 */
+.reminders-list {
+  background: var(--bg-color);
+  border-radius: 12rpx;
+  padding: 16rpx;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx;
+  background: #ffffff;
+  border-radius: 8rpx;
+  margin-bottom: 12rpx;
+}
+
+.reminder-type {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.reminder-interval {
+  font-size: 24rpx;
+  margin-top: 4rpx;
+}
+
+.reminder-switch {
+  margin: 0 16rpx;
+}
+
+.reminder-delete {
+  padding: 16rpx;
+  font-size: 32rpx;
+}
+
+.add-reminder-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx;
+  background: #ffffff;
+  border-radius: 8rpx;
+  color: var(--primary-green);
+  font-size: 28rpx;
+}
+
+/* 提交按钮 */
+.submit-btns {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 48rpx;
+}
+
+.btn-cancel {
+  flex: 1;
+  background: #ffffff;
+  color: var(--text-secondary);
+  border: 2rpx solid var(--border-color);
+  border-radius: 48rpx;
+  padding: 20rpx 0;
+  font-size: 30rpx;
+}
+
+.btn-primary {
+  flex: 1;
+  background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+  color: #ffffff;
+  border: none;
+  border-radius: 48rpx;
+  padding: 20rpx 0;
+  font-size: 30rpx;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}

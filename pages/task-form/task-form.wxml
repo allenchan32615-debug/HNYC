@@ -1,0 +1,122 @@
+<view class="container">
+  <view class="form-card card">
+    <!-- 基本信息 -->
+    <view class="form-section">
+      <view class="section-title">任务信息</view>
+      
+      <!-- 任务标题 -->
+      <view class="form-item">
+        <view class="form-label required">任务标题</view>
+        <input class="input" placeholder="例如：给小花浇水" value="{{formData.title}}" bindinput="onInputChange" data-field="title" maxlength="30" />
+      </view>
+
+      <!-- 关联植宠 -->
+      <view class="form-item">
+        <view class="form-label required">关联植宠</view>
+        <view class="pet-selector" bindtap="selectPet">
+          <view class="pet-info flex" wx:if="{{formData.petId}}">
+            <image class="pet-image" src="{{selectedPet.image || '/images/default-pet.png'}}" mode="aspectFill" />
+            <view class="pet-details flex-1">
+              <view class="pet-name">{{selectedPet.name}}</view>
+              <view class="pet-type text-hint">{{getPetTypeName(selectedPet.type)}}</view>
+            </view>
+            <image class="arrow-icon" src="/images/icons/arrow-right.png" mode="aspectFit" />
+          </view>
+          <view class="pet-placeholder" wx:else>
+            <text class="text-hint">选择要照顾的植宠</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 任务类型 -->
+      <view class="form-item">
+        <view class="form-label required">任务类型</view>
+        <view class="type-grid grid-3">
+          <view class="type-option {{formData.type === item.value ? 'active' : ''}}" 
+                wx:for="{{taskTypes}}" wx:key="value" 
+                bindtap="selectType" data-type="{{item.value}}">
+            <image class="type-icon" src="{{item.icon}}" mode="aspectFit" />
+            <text class="type-label">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 任务描述 -->
+      <view class="form-item">
+        <view class="form-label">任务描述</view>
+        <textarea class="textarea" placeholder="补充说明（可选）" value="{{formData.description}}" bindinput="onInputChange" data-field="description" maxlength="200" />
+      </view>
+
+      <!-- 优先级 -->
+      <view class="form-item">
+        <view class="form-label">优先级</view>
+        <view class="priority-selector">
+          <view class="priority-option {{formData.priority === 'low' ? 'active low' : ''}}" bindtap="selectPriority" data-priority="low">
+            <text>低</text>
+          </view>
+          <view class="priority-option {{formData.priority === 'medium' ? 'active medium' : ''}}" bindtap="selectPriority" data-priority="medium">
+            <text>中</text>
+          </view>
+          <view class="priority-option {{formData.priority === 'high' ? 'active high' : ''}}" bindtap="selectPriority" data-priority="high">
+            <text>高</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 时间设置 -->
+    <view class="form-section">
+      <view class="section-title">时间设置</view>
+      
+      <!-- 提醒时间 -->
+      <view class="form-item">
+        <view class="form-label required">提醒时间</view>
+        <picker mode="time" value="{{formData.schedule.time}}" bindchange="onTimeChange">
+          <view class="picker {{formData.schedule.time ? '' : 'placeholder'}}">
+            {{formData.schedule.time || '选择提醒时间'}}
+          </view>
+        </picker>
+      </view>
+
+      <!-- 重复周期 -->
+      <view class="form-item">
+        <view class="form-label">重复周期</view>
+        <view class="schedule-selector">
+          <view class="schedule-option {{formData.schedule.type === 'once' ? 'active' : ''}}" bindtap="selectSchedule" data-type="once">
+            <text>仅一次</text>
+          </view>
+          <view class="schedule-option {{formData.schedule.type === 'daily' ? 'active' : ''}}" bindtap="selectSchedule" data-type="daily">
+            <text>每天</text>
+          </view>
+          <view class="schedule-option {{formData.schedule.type === 'weekly' ? 'active' : ''}}" bindtap="selectSchedule" data-type="weekly">
+            <text>每周</text>
+          </view>
+        </view>
+
+        <!-- 每周选择 -->
+        <view class="weekdays-selector" wx:if="{{formData.schedule.type === 'weekly'}}">
+          <view class="weekday-item {{item.selected ? 'active' : ''}}" 
+                wx:for="{{weekdays}}" wx:key="value" 
+                bindtap="toggleWeekday" data-index="{{index}}">
+            <text>{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 发布设置 -->
+    <view class="form-section">
+      <view class="form-item flex-between">
+        <view class="form-label">完成后发布到广场</view>
+        <switch checked="{{formData.isPublic}}" bindchange="onSwitchChange" data-field="isPublic" color="#4CAF50" />
+      </view>
+      <view class="form-tip">发布后其他用户可以看到任务完成情况</view>
+    </view>
+
+    <!-- 提交按钮 -->
+    <view class="submit-btns">
+      <button class="btn-cancel" bindtap="goBack">取消</button>
+      <button class="btn-primary" bindtap="submitForm" loading="{{submitting}}">保存</button>
+    </view>
+  </view>
+</view>

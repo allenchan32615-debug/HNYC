@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "公园广场",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark",
+  "onReachBottomDistance": 50
+}

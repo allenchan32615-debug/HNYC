@@ -1,0 +1,2 @@
+/* 编辑植宠页面样式 - 复用添加植宠页面样式 */
+@import '../add-pet/add-pet.wxss';

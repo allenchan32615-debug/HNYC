@@ -1,0 +1,246 @@
+/* 我的空间页面样式 */
+
+.user-card {
+  background: linear-gradient(135deg, #4CAF50, #8BC34A);
+  color: #ffffff;
+}
+
+.user-info {
+  align-items: center;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  margin-right: 24rpx;
+}
+
+.nickname {
+  font-size: 34rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.bio {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.arrow-icon {
+  width: 32rpx;
+  height: 32rpx;
+  opacity: 0.8;
+}
+
+.stats {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12rpx;
+  padding: 16rpx 0;
+  margin-top: 24rpx;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 36rpx;
+  margin-bottom: 4rpx;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.stat-divider {
+  width: 1rpx;
+  height: 60rpx;
+  background: rgba(255, 255, 255, 0.3);
+  align-self: center;
+}
+
+/* 快捷操作 */
+.action-grid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16rpx 0;
+}
+
+.action-icon {
+  width: 64rpx;
+  height: 64rpx;
+  margin-bottom: 12rpx;
+}
+
+.action-text {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+/* 区块标题 */
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 24rpx;
+}
+
+.section-header {
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.more-link {
+  font-size: 26rpx;
+  color: var(--primary-green);
+}
+
+/* 筛选标签 */
+.filter-tabs {
+  display: flex;
+  background: var(--bg-color);
+  border-radius: 32rpx;
+  padding: 4rpx;
+}
+
+.tab-item {
+  padding: 8rpx 24rpx;
+  border-radius: 24rpx;
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  transition: all 0.3s;
+}
+
+.tab-item.active {
+  background: var(--primary-green);
+  color: #ffffff;
+}
+
+/* 植宠卡片 */
+.pet-card {
+  padding: 24rpx;
+}
+
+.pet-header {
+  align-items: center;
+}
+
+.pet-image {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  margin-right: 24rpx;
+  background: var(--bg-color);
+}
+
+.pet-name {
+  font-size: 32rpx;
+  color: var(--text-primary);
+}
+
+.pet-meta {
+  font-size: 26rpx;
+  display: flex;
+  align-items: center;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+}
+
+.reminder-icon {
+  width: 28rpx;
+  height: 28rpx;
+  margin-right: 8rpx;
+}
+
+.pet-actions {
+  padding: 16rpx;
+}
+
+.action-more {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+/* 任务卡片 */
+.task-card {
+  padding: 24rpx;
+}
+
+.task-header {
+  align-items: center;
+}
+
+.task-icon-wrapper {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  background: rgba(76, 175, 80, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+}
+
+.task-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.task-info {
+  flex: 1;
+}
+
+.task-title {
+  font-size: 30rpx;
+  color: var(--text-primary);
+}
+
+.task-meta {
+  font-size: 26rpx;
+  display: flex;
+  align-items: center;
+}
+
+.task-time {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: var(--primary-green);
+}
+
+/* 空状态 */
+.empty-state {
+  padding: 120rpx 0;
+}
+
+.empty-state image {
+  width: 240rpx;
+  height: 240rpx;
+  margin-bottom: 32rpx;
+}
+
+.empty-text {
+  font-size: 30rpx;
+  color: var(--text-hint);
+  margin-bottom: 16rpx;
+}
+
+.empty-desc {
+  font-size: 26rpx;
+  color: var(--text-hint);
+}

@@ -1,0 +1,230 @@
+/* 个人主页样式 */
+
+.profile-header {
+  text-align: center;
+  padding: 48rpx 32rpx;
+  background: linear-gradient(135deg, #4CAF50, #8BC34A);
+  color: #ffffff;
+}
+
+.user-avatar-wrapper {
+  margin-bottom: 24rpx;
+}
+
+.user-avatar {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 80rpx;
+  border: 6rpx solid rgba(255, 255, 255, 0.3);
+  background: #ffffff;
+}
+
+.user-nickname {
+  font-size: 36rpx;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+}
+
+.user-bio {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.user-stats {
+  gap: 32rpx;
+}
+
+.stat-item {
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 36rpx;
+  margin-bottom: 8rpx;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.profile-actions {
+  margin-top: 32rpx;
+}
+
+.btn-follow {
+  padding: 16rpx 64rpx;
+  background: #ffffff;
+  color: var(--primary-green);
+  border-radius: 32rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+}
+
+.btn-follow.following {
+  background: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
+.btn-follow::after {
+  border: none;
+}
+
+/* 编辑资料 */
+.edit-profile {
+  margin-top: 24rpx;
+  padding: 24rpx;
+}
+
+.edit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx;
+  background: var(--bg-color);
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: var(--primary-green);
+}
+
+/* 区块标题 */
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 24rpx;
+  padding-left: 16rpx;
+  border-left: 4rpx solid var(--primary-green);
+}
+
+/* 植宠网格 */
+.pets-section {
+  margin-top: 32rpx;
+}
+
+.pets-grid {
+  gap: 24rpx;
+}
+
+.pet-item {
+  background: #ffffff;
+  border-radius: 12rpx;
+  overflow: hidden;
+  box-shadow: var(--shadow-light);
+}
+
+.pet-image {
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--bg-color);
+}
+
+.pet-name {
+  padding: 16rpx 12rpx 8rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.pet-type {
+  padding: 0 12rpx 16rpx;
+  font-size: 24rpx;
+}
+
+/* 动态列表 */
+.posts-section {
+  margin-top: 32rpx;
+  padding-bottom: 32rpx;
+}
+
+.post-item {
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.post-images {
+  margin-bottom: 16rpx;
+}
+
+.image-grid {
+  display: grid;
+  gap: 12rpx;
+}
+
+.image-grid-single {
+  grid-template-columns: 1fr;
+}
+
+.image-grid-multiple {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.image-item {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 12rpx;
+  overflow: hidden;
+  background: var(--bg-color);
+}
+
+.image-grid-single .image-item {
+  max-height: 400rpx;
+  aspect-ratio: auto;
+}
+
+.image-item image {
+  width: 100%;
+  height: 100%;
+}
+
+.post-content {
+  font-size: 28rpx;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.post-footer {
+  align-items: center;
+}
+
+.post-time {
+  font-size: 24rpx;
+}
+
+.post-likes {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+/* 空状态 */
+.empty-state {
+  padding: 80rpx 0;
+  text-align: center;
+}
+
+.empty-state image {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: var(--text-hint);
+}
+
+/* 文本省略 */
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-ellipsis-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

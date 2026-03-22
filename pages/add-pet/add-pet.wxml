@@ -1,0 +1,143 @@
+<view class="container">
+  <view class="form-card card">
+    <!-- 基本信息 -->
+    <view class="form-section">
+      <view class="section-title">基本信息</view>
+      
+      <!-- 封面图片 -->
+      <view class="form-item">
+        <view class="form-label">封面图片</view>
+        <view class="image-uploader">
+          <view class="image-preview" wx:if="{{formData.image}}" bindtap="chooseCoverImage">
+            <image src="{{formData.image}}" mode="aspectFill" />
+            <view class="image-mask" bindtap="clearCoverImage">
+              <text>✕</text>
+            </view>
+          </view>
+          <view class="image-upload-btn" wx:else bindtap="chooseCoverImage">
+            <text class="upload-icon">+</text>
+            <text class="upload-text">选择封面</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 相册图片 -->
+      <view class="form-item">
+        <view class="form-label">相册图片</view>
+        <view class="image-grid">
+          <view class="image-item" wx:for="{{formData.images}}" wx:key="*this" bindtap="previewImage" data-index="{{index}}">
+            <image src="{{item}}" mode="aspectFill" />
+            <view class="image-delete" catchtap="deleteImage" data-index="{{index}}">
+              <text>✕</text>
+            </view>
+          </view>
+          <view class="image-add-btn" wx:if="{{formData.images.length < 9}}" bindtap="chooseImages">
+            <text class="add-icon">+</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 名称 -->
+      <view class="form-item">
+        <view class="form-label required">名称</view>
+        <input class="input" placeholder="给你的植宠起个名字" value="{{formData.name}}" bindinput="onInputChange" data-field="name" maxlength="20" />
+      </view>
+
+      <!-- 类型选择 -->
+      <view class="form-item">
+        <view class="form-label required">类型</view>
+        <view class="type-selector">
+          <view class="type-main">
+            <view class="type-option {{formData.type === 'plant' ? 'active' : ''}}" bindtap="selectType" data-type="plant">
+              <text>🌱</text>
+              <text>植物</text>
+            </view>
+            <view class="type-option {{formData.type === 'animal' ? 'active' : ''}}" bindtap="selectType" data-type="animal">
+              <text>🐾</text>
+              <text>动物</text>
+            </view>
+          </view>
+          
+          <view class="type-sub" wx:if="{{formData.type}}">
+            <view class="type-option {{formData.subtype === item.value && formData.type === item.category ? 'active' : ''}}" 
+                  wx:for="{{subtypes}}" wx:key="value" 
+                  bindtap="selectSubtype" data-type="{{item.value}}" data-category="{{item.category}}">
+              <text>{{item.icon}}</text>
+              <text>{{item.label}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 描述 -->
+      <view class="form-item">
+        <view class="form-label">描述</view>
+        <textarea class="textarea" placeholder="介绍一下你的植宠" value="{{formData.description}}" bindinput="onInputChange" data-field="description" maxlength="200" />
+      </view>
+    </view>
+
+    <!-- 时间信息 -->
+    <view class="form-section">
+      <view class="section-title">时间信息</view>
+      
+      <!-- 生日/购买日期 -->
+      <view class="form-item">
+        <view class="form-label">生日/购买日期</view>
+        <picker mode="date" value="{{formData.birthday}}" bindchange="onDateChange" data-field="birthday">
+          <view class="picker {{formData.birthday ? '' : 'placeholder'}}">
+            {{formData.birthday || '请选择日期'}}
+          </view>
+        </picker>
+      </view>
+
+      <!-- 初见日期 -->
+      <view class="form-item">
+        <view class="form-label">初见日期</view>
+        <picker mode="date" value="{{formData.firstMeetDate}}" bindchange="onDateChange" data-field="firstMeetDate">
+          <view class="picker {{formData.firstMeetDate ? '' : 'placeholder'}}">
+            {{formData.firstMeetDate || '请选择日期'}}
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 提醒设置 -->
+    <view class="form-section">
+      <view class="section-title">提醒设置</view>
+      
+      <view class="reminders-list">
+        <view class="reminder-item" wx:for="{{formData.reminders}}" wx:key="id">
+          <view class="reminder-info flex-1">
+            <view class="reminder-type">{{getReminderTypeName(item.type)}}</view>
+            <view class="reminder-interval text-hint">每{{item.interval}}天</view>
+          </view>
+          <view class="reminder-switch">
+            <switch checked="{{item.enabled}}" bindchange="toggleReminder" data-index="{{index}}" color="#4CAF50" />
+          </view>
+          <view class="reminder-delete" bindtap="deleteReminder" data-index="{{index}}">
+            <text>🗑</text>
+          </view>
+        </view>
+        
+        <view class="add-reminder-btn" bindtap="addReminder">
+          <text>+ 添加提醒</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 公开设置 -->
+    <view class="form-section">
+      <view class="form-item flex-between">
+        <view class="form-label">公开显示</view>
+        <switch checked="{{formData.isPublic}}" bindchange="onSwitchChange" data-field="isPublic" color="#4CAF50" />
+      </view>
+      <view class="form-tip">公开后其他用户可以看到你的植宠</view>
+    </view>
+
+    <!-- 提交按钮 -->
+    <view class="submit-btns">
+      <button class="btn-cancel" bindtap="goBack">取消</button>
+      <button class="btn-primary" bindtap="submitForm" loading="{{submitting}}">保存</button>
+    </view>
+  </view>
+</view>

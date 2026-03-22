@@ -1,0 +1,153 @@
+<view class="container">
+  <!-- 头部信息卡片 -->
+  <view class="pet-header card">
+    <view class="pet-cover-wrapper">
+      <image class="pet-cover" src="{{petInfo.image || '/images/default-pet.png'}}" mode="aspectFill" lazy-load />
+      <view class="pet-cover-overlay"></view>
+    </view>
+    <view class="pet-basic-info">
+      <view class="pet-name">{{petInfo.name}}</view>
+      <view class="pet-tags flex mt-16">
+        <view class="tag">{{petTypeName}}</view>
+        <view class="tag tag-blue ml-16">{{subTypeName}}</view>
+      </view>
+      <view class="pet-stats flex mt-24">
+        <view class="pet-stat-item">
+          <view class="stat-label text-hint">年龄</view>
+          <view class="stat-value">{{calculateAge(petInfo.birthday)}}</view>
+        </view>
+        <view class="pet-stat-item">
+          <view class="stat-label text-hint">陪伴</view>
+          <view class="stat-value">{{calculateDuration(petInfo.firstMeetDate)}}</view>
+        </view>
+        <view class="pet-stat-item">
+          <view class="stat-label text-hint">动态</view>
+          <view class="stat-value">{{posts.length}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="pet-actions flex-between">
+      <button class="btn-icon" bindtap="editPet">
+        <text>✏️</text>
+      </button>
+      <button class="btn-icon" bindtap="sharePet">
+        <text>📤</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 描述信息 -->
+  <view class="pet-description card" wx:if="{{petInfo.description}}">
+    <view class="section-title">关于{{petInfo.name}}</view>
+    <view class="description-text">{{petInfo.description}}</view>
+  </view>
+
+  <!-- 相册 -->
+  <view class="pet-album card" wx:if="{{petInfo.images && petInfo.images.length > 0}}">
+    <view class="section-title">相册</view>
+    <view class="album-grid">
+      <view class="album-item" wx:for="{{petInfo.images}}" wx:key="*this" bindtap="previewImage" data-index="{{index}}">
+        <image src="{{item}}" mode="aspectFill" lazy-load />
+      </view>
+    </view>
+  </view>
+
+  <!-- 标签页切换 -->
+  <view class="tabs-wrapper">
+    <view class="tabs">
+      <view class="tab-item {{currentTab === 'growth' ? 'active' : ''}}" bindtap="switchTab" data-tab="growth">
+        <text>成长记录</text>
+      </view>
+      <view class="tab-item {{currentTab === 'tasks' ? 'active' : ''}}" bindtap="switchTab" data-tab="tasks">
+        <text>任务清单</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 成长时间线 -->
+  <view class="timeline-section" wx:if="{{currentTab === 'growth'}}">
+    <view class="timeline">
+      <view class="timeline-item" wx:for="{{posts}}" wx:key="_id">
+        <view class="timeline-dot"></view>
+        <view class="timeline-content card">
+          <view class="timeline-date">{{formatRelativeTime(item.createdAt)}}</view>
+          <view class="timeline-content-wrapper">
+            <view class="post-content" wx:if="{{item.content}}">{{item.content}}</view>
+            <view class="post-images" wx:if="{{item.images && item.images.length > 0}}">
+              <view class="post-image {{item.images.length > 1 ? 'grid' : ''}}" wx:for="{{item.images}}" wx:key="*this" wx:for-item="image">
+                <image src="{{image}}" mode="aspectFill" lazy-load bindtap="previewImage" data-index="{{index}}" data-source="post" />
+              </view>
+            </view>
+          </view>
+          <view class="post-footer flex-between mt-16">
+            <view class="post-actions flex">
+              <view class="action-item" bindtap="likePost" data-id="{{item._id}}">
+                <text class="{{item.liked ? 'liked' : ''}}">🤍</text>
+                <text class="ml-8">{{item.likeCount || 0}}</text>
+              </view>
+              <view class="action-item ml-24">
+                <text>💬</text>
+                <text class="ml-8">{{item.commentCount || 0}}</text>
+              </view>
+            </view>
+            <view class="post-type tag">{{getPostTypeText(item.type)}}</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="empty-state" wx:if="{{posts.length === 0}}">
+        <image src="/images/empty-posts.png" mode="aspectFit" />
+        <view class="empty-text">还没有成长记录</view>
+        <view class="empty-desc">发布动态记录{{petInfo.name}}的成长点滴</view>
+        <button class="btn-primary mt-24" bindtap="publishDynamic">发布动态</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 任务时间线 -->
+  <view class="timeline-section" wx:if="{{currentTab === 'tasks'}}">
+    <view class="add-task-btn" bindtap="addTask">
+      <text>+ 添加任务</text>
+    </view>
+
+    <view class="tasks-list">
+      <view class="task-card card" wx:for="{{tasks}}" wx:key="_id">
+        <view class="task-header flex">
+          <view class="task-status {{item.isCompleted ? 'completed' : ''}}">
+            <view class="status-dot"></view>
+          </view>
+          <view class="task-info flex-1" bindtap="completeTask" data-id="{{item._id}}">
+            <view class="task-title {{item.isCompleted ? 'completed' : ''}}">{{item.title}}</view>
+            <view class="task-meta text-hint mt-8">
+              <text>{{getTaskTypeText(item.type)}}</text>
+              <text class="mx-8">•</text>
+              <text>{{item.schedule.time}}</text>
+              <text class="mx-8">•</text>
+              <text style="color: {{getPriorityColor(item.priority)}}">{{getPriorityText(item.priority)}}</text>
+            </view>
+          </view>
+          <view class="task-action">
+            <switch checked="{{item.isCompleted}}" disabled bindchange="completeTask" data-id="{{item._id}}" color="#4CAF50" />
+          </view>
+        </view>
+        
+        <!-- 任务详情 -->
+        <view class="task-details" wx:if="{{item.description}}">
+          <view class="task-desc text-hint">{{item.description}}</view>
+        </view>
+
+        <!-- 任务周期 -->
+        <view class="task-schedule text-hint mt-16">
+          <text>{{getScheduleText(item.schedule)}}</text>
+        </view>
+      </view>
+
+      <view class="empty-state" wx:if="{{tasks.length === 0}}">
+        <image src="/images/empty-tasks.png" mode="aspectFit" />
+        <view class="empty-text">还没有任务</view>
+        <view class="empty-desc">创建任务来提醒照顾{{petInfo.name}}</view>
+        <button class="btn-primary mt-24" bindtap="addTask">创建任务</button>
+      </view>
+    </view>
+  </view>
+</view>

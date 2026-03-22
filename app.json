@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/space/space",
+    "pages/pet-detail/pet-detail",
+    "pages/task-list/task-list",
+    "pages/task-form/task-form",
+    "pages/add-pet/add-pet",
+    "pages/edit-pet/edit-pet",
+    "pages/profile/profile",
+    "pages/publish/publish"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#4CAF50",
+    "navigationBarTitleText": "花鸟鱼虫",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f5f5"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#4CAF50",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "公园广场",
+        "iconPath": "images/tabbar/home.png",
+        "selectedIconPath": "images/tabbar/home-active.png"
+      },
+      {
+        "pagePath": "pages/space/space",
+        "text": "我的空间",
+        "iconPath": "images/tabbar/space.png",
+        "selectedIconPath": "images/tabbar/space-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

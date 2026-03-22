@@ -1,0 +1,83 @@
+<view class="container">
+  <view class="form-card card">
+    <!-- 选择植宠 -->
+    <view class="form-item">
+      <view class="form-label">关联植宠</view>
+      <view class="pet-selector" bindtap="selectPet">
+        <view class="pet-info flex" wx:if="{{selectedPet}}">
+          <image class="pet-image" src="{{selectedPet.image || '/images/default-pet.png'}}" mode="aspectFill" />
+          <view class="pet-details flex-1">
+            <view class="pet-name">{{selectedPet.name}}</view>
+            <view class="pet-type text-hint">{{getPetTypeName(selectedPet.type)}}</view>
+          </view>
+          <image class="arrow-icon" src="/images/icons/arrow-right.png" mode="aspectFit" />
+        </view>
+        <view class="pet-placeholder" wx:else>
+          <text class="text-hint">选择关联植宠（可选）</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 输入内容 -->
+    <view class="form-item">
+      <textarea class="content-textarea" placeholder="分享你的植宠故事..." value="{{content}}" maxlength="500" bindinput="onContentChange" />
+      <view class="char-count">{{content.length}}/500</view>
+    </view>
+
+    <!-- 图片上传 -->
+    <view class="form-item">
+      <view class="image-grid">
+        <view class="image-item" wx:for="{{images}}" wx:key="*this" wx:for-item="image" wx:for-index="idx">
+          <image src="{{image}}" mode="aspectFill" bindtap="previewImage" data-index="{{idx}}" />
+          <view class="image-delete" catchtap="deleteImage" data-index="{{idx}}">
+            <text>✕</text>
+          </view>
+        </view>
+        <view class="image-add-btn" wx:if="{{images.length < 9}}" bindtap="chooseImages">
+          <text class="add-icon">+</text>
+          <text class="add-text">添加图片</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 动态类型 -->
+    <view class="form-item">
+      <view class="form-label">动态类型</view>
+      <view class="type-selector">
+        <view class="type-option {{postType === 'daily' ? 'active' : ''}}" bindtap="selectType" data-type="daily">
+          <text>📝</text>
+          <text>日常</text>
+        </view>
+        <view class="type-option {{postType === 'task' ? 'active' : ''}}" bindtap="selectType" data-type="task">
+          <text>✅</text>
+          <text>任务</text>
+        </view>
+        <view class="type-option {{postType === 'achievement' ? 'active' : ''}}" bindtap="selectType" data-type="achievement">
+          <text>🏆</text>
+          <text>成就</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 位置（可选） -->
+    <view class="form-item" wx:if="{{showLocation}}">
+      <view class="form-label">位置</view>
+      <view class="location-selector" bindtap="chooseLocation">
+        <text class="location-icon">📍</text>
+        <text class="location-text">{{location || '选择位置'}}</text>
+      </view>
+    </view>
+
+    <!-- 公开设置 -->
+    <view class="form-item flex-between">
+      <view class="form-label">公开可见</view>
+      <switch checked="{{isPublic}}" bindchange="onSwitchChange" color="#4CAF50" />
+    </view>
+    <view class="form-tip">公开动态将显示在公园广场</view>
+
+    <!-- 提交按钮 -->
+    <view class="submit-btn">
+      <button class="btn-primary" bindtap="submitPost" loading="{{submitting}}">发布</button>
+    </view>
+  </view>
+</view>

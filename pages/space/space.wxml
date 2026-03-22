@@ -1,0 +1,131 @@
+<view class="container">
+  <!-- 用户信息卡片 -->
+  <view class="user-card card" bindtap="goToProfile">
+    <view class="user-info flex">
+      <image class="avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill" />
+      <view class="user-details flex-1">
+        <view class="nickname">{{userInfo.nickName || '点击登录'}}</view>
+        <view class="bio text-hint">记录与花鸟鱼虫的美好时光</view>
+      </view>
+      <image class="arrow-icon" src="/images/icons/arrow-right.png" mode="aspectFit" />
+    </view>
+    <view class="stats flex mt-24">
+      <view class="stat-item flex-1 text-center">
+        <view class="stat-value text-bold text-green">{{petCount}}</view>
+        <view class="stat-label text-hint">植宠</view>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item flex-1 text-center">
+        <view class="stat-value text-bold text-blue">{{taskCount}}</view>
+        <view class="stat-label text-hint">任务</view>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item flex-1 text-center">
+        <view class="stat-value text-bold text-orange">{{dynamicCount}}</view>
+        <view class="stat-label text-hint">动态</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷操作 -->
+  <view class="quick-actions card">
+    <view class="section-title">快捷操作</view>
+    <view class="action-grid grid-4">
+      <view class="action-item" bindtap="addPet">
+        <image class="action-icon" src="/images/icons/add-pet.png" mode="aspectFit" />
+        <view class="action-text">添加植宠</view>
+      </view>
+      <view class="action-item" bindtap="goToTaskList">
+        <image class="action-icon" src="/images/icons/task.png" mode="aspectFit" />
+        <view class="action-text">创建任务</view>
+      </view>
+      <view class="action-item" bindtap="publishDynamic">
+        <image class="action-icon" src="/images/icons/publish.png" mode="aspectFit" />
+        <view class="action-text">发布动态</view>
+      </view>
+      <view class="action-item" bindtap="viewReminders">
+        <image class="action-icon" src="/images/icons/remind.png" mode="aspectFit" />
+        <view class="action-text">今日提醒</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 我的植宠 -->
+  <view class="pets-section">
+    <view class="section-header flex-between">
+      <view class="section-title">我的植宠</view>
+      <view class="filter-tabs">
+        <view class="tab-item {{currentFilter === 'all' ? 'active' : ''}}" bindtap="filterPets" data-type="all">全部</view>
+        <view class="tab-item {{currentFilter === 'plant' ? 'active' : ''}}" bindtap="filterPets" data-type="plant">植物</view>
+        <view class="tab-item {{currentFilter === 'animal' ? 'active' : ''}}" bindtap="filterPets" data-type="animal">动物</view>
+      </view>
+    </view>
+
+    <!-- 植宠列表 -->
+    <view class="pets-list">
+      <view class="pet-card card" wx:for="{{pets}}" wx:key="_id" bindtap="goToPetDetail" data-id="{{item._id}}">
+        <view class="pet-header flex">
+          <image class="pet-image" src="{{item.image || '/images/default-pet.png'}}" mode="aspectFill" lazy-load />
+          <view class="pet-info flex-1">
+            <view class="pet-name text-bold">{{item.name}}</view>
+            <view class="pet-meta text-hint mt-8">
+              <text class="tag">{{getPetTypeName(item.type)}}</text>
+              <text class="ml-16">陪伴{{calculateDuration(item.firstMeetDate)}}</text>
+            </view>
+            <view class="pet-reminders mt-16" wx:if="{{item.reminders && item.reminders.length > 0}}">
+              <view class="reminder-item">
+                <image class="reminder-icon" src="/images/icons/remind.png" mode="aspectFit" />
+                <text class="text-hint">{{item.reminders.length}}个提醒</text>
+              </view>
+            </view>
+          </view>
+          <view class="pet-actions">
+            <image class="action-more" src="/images/icons/more.png" mode="aspectFit" catchtap="showPetActions" data-id="{{item._id}}" />
+          </view>
+        </view>
+      </view>
+
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{pets.length === 0}}">
+        <image src="/images/empty-pets.png" mode="aspectFit" />
+        <view class="empty-text">还没有植宠</view>
+        <view class="empty-desc">点击添加你的第一个植宠吧</view>
+        <button class="btn-primary mt-24" bindtap="addPet">添加植宠</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最近任务 -->
+  <view class="tasks-section">
+    <view class="section-header flex-between">
+      <view class="section-title">最近任务</view>
+      <view class="more-link" bindtap="goToTaskList">查看全部</view>
+    </view>
+
+    <view class="tasks-list">
+      <view class="task-card card" wx:for="{{recentTasks}}" wx:key="_id" bindtap="completeTask" data-id="{{item._id}}">
+        <view class="task-header flex">
+          <view class="task-icon-wrapper">
+            <image class="task-icon" src="{{getTaskTypeIcon(item.type)}}" mode="aspectFit" />
+          </view>
+          <view class="task-info flex-1">
+            <view class="task-title text-bold">{{item.title}}</view>
+            <view class="task-meta text-hint mt-8">
+              <text>{{item.petName}}</text>
+              <text class="mx-8">•</text>
+              <text style="color: {{getPriorityColor(item.priority)}}">{{getPriorityText(item.priority)}}</text>
+            </view>
+          </view>
+          <view class="task-time text-hint">{{item.schedule.time}}</view>
+        </view>
+      </view>
+
+      <view class="empty-state" wx:if="{{recentTasks.length === 0}}">
+        <image src="/images/empty-tasks.png" mode="aspectFit" />
+        <view class="empty-text">暂无待办任务</view>
+        <view class="empty-desc">创建任务来提醒照顾植宠吧</view>
+        <button class="btn-primary mt-24" bindtap="goToTaskList">创建任务</button>
+      </view>
+    </view>
+  </view>
+</view>

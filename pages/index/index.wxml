@@ -1,0 +1,124 @@
+<view class="container">
+  <!-- 顶部搜索和筛选 -->
+  <view class="search-bar card">
+    <view class="search-input-wrapper" bindtap="showSearch">
+      <image class="search-icon" src="/images/icons/search.png" mode="aspectFit" />
+      <text class="search-placeholder">搜索植宠、用户</text>
+    </view>
+    <view class="publish-btn" bindtap="publishDynamic">
+      <text>发布</text>
+    </view>
+  </view>
+
+  <!-- 分类标签 -->
+  <view class="category-scroll scroll-view" scroll-x enable-flex>
+    <view class="category-item {{currentCategory === 'all' ? 'active' : ''}}" bindtap="switchCategory" data-category="all">推荐</view>
+    <view class="category-item {{currentCategory === 'plant' ? 'active' : ''}}" bindtap="switchCategory" data-category="plant">植物</view>
+    <view class="category-item {{currentCategory === 'flower' ? 'active' : ''}}" bindtap="switchCategory" data-category="flower">花卉</view>
+    <view class="category-item {{currentCategory === 'fish' ? 'active' : ''}}" bindtap="switchCategory" data-category="fish">鱼类</view>
+    <view class="category-item {{currentCategory === 'turtle' ? 'active' : ''}}" bindtap="switchCategory" data-category="turtle">龟类</view>
+    <view class="category-item {{currentCategory === 'bird' ? 'active' : ''}}" bindtap="switchCategory" data-category="bird">鸟类</view>
+    <view class="category-item {{currentCategory === 'other' ? 'active' : ''}}" bindtap="switchCategory" data-category="other">其他</view>
+  </view>
+
+  <!-- 排序方式 -->
+  <view class="sort-bar flex-between">
+    <view class="sort-tabs">
+      <view class="sort-item {{currentSort === 'latest' ? 'active' : ''}}" bindtap="switchSort" data-sort="latest">最新</view>
+      <view class="sort-item {{currentSort === 'hot' ? 'active' : ''}}" bindtap="switchSort" data-sort="hot">热门</view>
+    </view>
+    <view class="refresh-btn" bindtap="refresh">
+      <text>🔄</text>
+    </view>
+  </view>
+
+  <!-- 动态列表 -->
+  <scroll-view class="posts-scroll" scroll-y enhanced="{{true}}" show-scrollbar="{{false}}" bindrefresherrefresh="onRefresh" refresher-triggered="{{refreshing}}">
+    <view class="posts-list">
+      <view class="post-card card" wx:for="{{posts}}" wx:key="_id">
+        <!-- 用户信息 -->
+        <view class="post-header flex" bindtap="goToUserProfile" data-user-id="{{item.userId}}">
+          <image class="user-avatar" src="{{item.userAvatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+          <view class="user-info flex-1">
+            <view class="user-name text-bold">{{item.userNickName}}</view>
+            <view class="post-time text-hint">{{formatRelativeTime(item.createdAt)}}</view>
+          </view>
+          <view class="follow-btn" wx:if="{{!item.isFollowed && item.userId !== currentUserId}}" catchtap="followUser" data-user-id="{{item.userId}}">
+            <text>+ 关注</text>
+          </view>
+        </view>
+
+        <!-- 关联植宠 -->
+        <view class="post-pet" wx:if="{{item.petId}}" bindtap="goToPetDetail" data-pet-id="{{item.petId}}">
+          <image class="pet-thumb" src="{{item.petImage || '/images/default-pet.png'}}" mode="aspectFill" />
+          <view class="pet-info">
+            <view class="pet-name">{{item.petName}}</view>
+            <view class="pet-type text-hint">{{getPetTypeName(item.petType)}}</view>
+          </view>
+        </view>
+
+        <!-- 内容 -->
+        <view class="post-content-wrapper">
+          <view class="post-text" wx:if="{{item.content}}">{{item.content}}</view>
+          
+          <!-- 图片 -->
+          <view class="post-images" wx:if="{{item.images && item.images.length > 0}}">
+            <view class="image-grid image-grid-{{item.images.length > 1 ? 'multiple' : 'single'}}">
+              <view class="image-item" wx:for="{{item.images}}" wx:key="*this" wx:for-item="image" bindtap="previewImages" data-index="{{index}}" data-post-index="{{index}}">
+                <image src="{{image}}" mode="aspectFill" lazy-load />
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 互动 -->
+        <view class="post-footer flex-between">
+          <view class="post-actions flex">
+            <view class="action-item {{item.isLiked ? 'liked' : ''}}" bindtap="likePost" data-id="{{item._id}}">
+              <text class="action-icon">{{item.isLiked ? '❤️' : '🤍'}}</text>
+              <text class="action-count">{{item.likeCount || 0}}</text>
+            </view>
+            <view class="action-item" bindtap="showComments" data-id="{{item._id}}">
+              <text class="action-icon">💬</text>
+              <text class="action-count">{{item.commentCount || 0}}</text>
+            </view>
+            <view class="action-item">
+              <text class="action-icon">👁</text>
+              <text class="action-count">{{item.viewCount || 0}}</text>
+            </view>
+          </view>
+          <view class="post-type-tag">{{getPostTypeText(item.type)}}</view>
+        </view>
+
+        <!-- 评论区 -->
+        <view class="comments-section" wx:if="{{item.showComments && item.comments && item.comments.length > 0}}">
+          <view class="comments-divider"></view>
+          <view class="comment-item" wx:for="{{item.comments}}" wx:key="*this" wx:for-item="comment">
+            <image class="comment-avatar" src="{{comment.userAvatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+            <view class="comment-content">
+              <view class="comment-user text-bold">{{comment.userNickName}}</view>
+              <view class="comment-text">{{comment.content}}</view>
+              <view class="comment-time text-hint">{{formatRelativeTime(comment.createdAt)}}</view>
+            </view>
+          </view>
+          <view class="view-more-comments" wx:if="{{item.commentCount > item.comments.length}}" bindtap="viewAllComments" data-id="{{item._id}}">
+            <text>查看全部{{item.commentCount}}条评论</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 加载更多 -->
+      <view class="load-more" wx:if="{{hasMore}}">
+        <text class="loading-text">加载中...</text>
+      </view>
+
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{posts.length === 0 && !loading}}">
+        <image src="/images/empty-posts.png" mode="aspectFit" />
+        <view class="empty-text">暂无动态</view>
+        <view class="empty-desc">成为第一个分享的人吧</view>
+        <button class="btn-primary mt-24" bindtap="publishDynamic">发布动态</button>
+      </view>
+    </view>
+  </scroll-view>
+</view>
