@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>配色方案预览 - 花鸟鱼虫</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .color-schemes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .scheme-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .scheme-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .scheme-header {
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .color-palette {
+            display: flex;
+            height: 100px;
+        }
+
+        .color-swatch {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            writing-mode: vertical-rl;
+        }
+
+        .preview-section {
+            padding: 20px;
+        }
+
+        .preview-card {
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .preview-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .preview-content {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .preview-button {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-top: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+
+        .preview-stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            flex: 1;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .preview-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .tag {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .btn-apply {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .btn-apply:hover {
+            opacity: 0.9;
+        }
+
+        .current-selection {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .current-selection h3 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .selection-colors {
+            display: flex;
+            gap: 5px;
+            height: 40px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .selection-swatch {
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .color-schemes {
+                grid-template-columns: 1fr;
+            }
+            
+            .current-selection {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 配色方案预览</h1>
+
+        <div class="current-selection" id="currentSelection" style="display: none;">
+            <h3>当前选择方案</h3>
+            <div class="selection-colors" id="selectionColors"></div>
+            <p style="margin-top: 10px; font-size: 14px;" id="selectionName"></p>
+            <button onclick="applyToMain()" style="width: 100%; margin-top: 10px; padding: 10px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer;">应用到主网站</button>
+        </div>
+
+        <div class="color-schemes">
+            <!-- 方案 1: 清新薄荷 -->
+            <div class="scheme-card" data-scheme="1">
+                <div class="scheme-header" style="background: #4ECDC4; color: white;">
+                    方案 1: 清新薄荷
+                </div>
+                <div class="color-palette">
+                    <div class="color-swatch" style="background: #4ECDC4;">主色<br>#4ECDC4</div>
+                    <div class="color-swatch" style="background: #44A08D;">辅色<br>#44A08D</div>
+                    <div class="color-swatch" style="background: #F7FFF7; color: #333;">强调色<br>#F7FFF7</div>
+                    <div class="color-swatch" style="background: #F0F7F4; color: #333;">背景<br>#F0F7F4</div>
+                    <div class="color-swatch" style="background: #2D5F4C;">文字<br>#2D5F4C</div>
+                </div>
+                <div class="preview-section">
+                    <div class="preview-card" style="background: #F0F7F4;">
+                        <div class="preview-title" style="color: #2D5F4C;">卡片背景</div>
+                        <div class="preview-content" style="color: #2D5F4C;">
+                            这是卡片内容区域，显示文字的可读性
+                        </div>
+                        <button class="preview-button" style="background: #4ECDC4;">主要按钮</button>
+                        <div class="preview-tags">
+                            <span class="tag" style="background: #44A08D; color: white;">标签 1</span>
+                            <span class="tag" style="background: #4ECDC4; color: white;">标签 2</span>
+                        </div>
+                    </div>
+                    <div class="preview-stats">
+                        <div class="stat-item" style="background: #4ECDC4; color: white;">
+                            <div class="stat-number">23</div>
+                            <div class="stat-label">点赞</div>
+                        </div>
+                        <div class="stat-item" style="background: #44A08D; color: white;">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">评论</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-apply" style="background: #4ECDC4; color: white;" onclick="selectScheme(1)">选择此方案</button>
+            </div>
+
+            <!-- 方案 2: 莫兰迪薄荷 -->
+            <div class="scheme-card" data-scheme="2">
+                <div class="scheme-header" style="background: #88B3C8; color: white;">
+                    方案 2: 莫兰迪薄荷
+                </div>
+                <div class="color-palette">
+                    <div class="color-swatch" style="background: #88B3C8;">主色<br>#88B3C8</div>
+                    <div class="color-swatch" style="background: #6B9080;">辅色<br>#6B9080</div>
+                    <div class="color-swatch" style="background: #EAF4F4; color: #333;">强调色<br>#EAF4F4</div>
+                    <div class="color-swatch" style="background: #F6FFF8; color: #333;">背景<br>#F6FFF8</div>
+                    <div class="color-swatch" style="background: #355070;">文字<br>#355070</div>
+                </div>
+                <div class="preview-section">
+                    <div class="preview-card" style="background: #F6FFF8;">
+                        <div class="preview-title" style="color: #355070;">卡片背景</div>
+                        <div class="preview-content" style="color: #355070;">
+                            这是卡片内容区域，显示文字的可读性
+                        </div>
+                        <button class="preview-button" style="background: #88B3C8;">主要按钮</button>
+                        <div class="preview-tags">
+                            <span class="tag" style="background: #6B9080; color: white;">标签 1</span>
+                            <span class="tag" style="background: #88B3C8; color: white;">标签 2</span>
+                        </div>
+                    </div>
+                    <div class="preview-stats">
+                        <div class="stat-item" style="background: #88B3C8; color: white;">
+                            <div class="stat-number">23</div>
+                            <div class="stat-label">点赞</div>
+                        </div>
+                        <div class="stat-item" style="background: #6B9080; color: white;">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">评论</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-apply" style="background: #88B3C8; color: white;" onclick="selectScheme(2)">选择此方案</button>
+            </div>
+
+            <!-- 方案 3: 翡翠薄荷 -->
+            <div class="scheme-card" data-scheme="3">
+                <div class="scheme-header" style="background: #7FB069; color: white;">
+                    方案 3: 翡翠薄荷
+                </div>
+                <div class="color-palette">
+                    <div class="color-swatch" style="background: #7FB069;">主色<br>#7FB069</div>
+                    <div class="color-swatch" style="background: #6B8E23;">辅色<br>#6B8E23</div>
+                    <div class="color-swatch" style="background: #FAF9F6; color: #333;">强调色<br>#FAF9F6</div>
+                    <div class="color-swatch" style="background: #F8F9FA; color: #333;">背景<br>#F8F9FA</div>
+                    <div class="color-swatch" style="background: #2F4F4F;">文字<br>#2F4F4F</div>
+                </div>
+                <div class="preview-section">
+                    <div class="preview-card" style="background: #F8F9FA;">
+                        <div class="preview-title" style="color: #2F4F4F;">卡片背景</div>
+                        <div class="preview-content" style="color: #2F4F4F;">
+                            这是卡片内容区域，显示文字的可读性
+                        </div>
+                        <button class="preview-button" style="background: #7FB069;">主要按钮</button>
+                        <div class="preview-tags">
+                            <span class="tag" style="background: #6B8E23; color: white;">标签 1</span>
+                            <span class="tag" style="background: #7FB069; color: white;">标签 2</span>
+                        </div>
+                    </div>
+                    <div class="preview-stats">
+                        <div class="stat-item" style="background: #7FB069; color: white;">
+                            <div class="stat-number">23</div>
+                            <div class="stat-label">点赞</div>
+                        </div>
+                        <div class="stat-item" style="background: #6B8E23; color: white;">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">评论</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-apply" style="background: #7FB069; color: white;" onclick="selectScheme(3)">选择此方案</button>
+            </div>
+
+            <!-- 方案 4: 冰川薄荷 -->
+            <div class="scheme-card" data-scheme="4">
+                <div class="scheme-header" style="background: #98DDCA; color: white;">
+                    方案 4: 冰川薄荷
+                </div>
+                <div class="color-palette">
+                    <div class="color-swatch" style="background: #98DDCA;">主色<br>#98DDCA</div>
+                    <div class="color-swatch" style="background: #7EC8B5;">辅色<br>#7EC8B5</div>
+                    <div class="color-swatch" style="background: #E8F4F8; color: #333;">强调色<br>#E8F4F8</div>
+                    <div class="color-swatch" style="background: #F0F4F8; color: #333;">背景<br>#F0F4F8</div>
+                    <div class="color-swatch" style="background: #1A535C;">文字<br>#1A535C</div>
+                </div>
+                <div class="preview-section">
+                    <div class="preview-card" style="background: #F0F4F8;">
+                        <div class="preview-title" style="color: #1A535C;">卡片背景</div>
+                        <div class="preview-content" style="color: #1A535C;">
+                            这是卡片内容区域，显示文字的可读性
+                        </div>
+                        <button class="preview-button" style="background: #98DDCA;">主要按钮</button>
+                        <div class="preview-tags">
+                            <span class="tag" style="background: #7EC8B5; color: white;">标签 1</span>
+                            <span class="tag" style="background: #98DDCA; color: white;">标签 2</span>
+                        </div>
+                    </div>
+                    <div class="preview-stats">
+                        <div class="stat-item" style="background: #98DDCA; color: white;">
+                            <div class="stat-number">23</div>
+                            <div class="stat-label">点赞</div>
+                        </div>
+                        <div class="stat-item" style="background: #7EC8B5; color: white;">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">评论</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-apply" style="background: #98DDCA; color: white;" onclick="selectScheme(4)">选择此方案</button>
+            </div>
+
+            <!-- 方案 5: 抹茶薄荷 -->
+            <div class="scheme-card" data-scheme="5">
+                <div class="scheme-header" style="background: #A8C69F; color: white;">
+                    方案 5: 抹茶薄荷
+                </div>
+                <div class="color-palette">
+                    <div class="color-swatch" style="background: #A8C69F;">主色<br>#A8C69F</div>
+                    <div class="color-swatch" style="background: #8FB339;">辅色<br>#8FB339</div>
+                    <div class="color-swatch" style="background: #FFFBF0; color: #333;">强调色<br>#FFFBF0</div>
+                    <div class="color-swatch" style="background: #F9F7F2; color: #333;">背景<br>#F9F7F2</div>
+                    <div class="color-swatch" style="background: #4A5D23;">文字<br>#4A5D23</div>
+                </div>
+                <div class="preview-section">
+                    <div class="preview-card" style="background: #F9F7F2;">
+                        <div class="preview-title" style="color: #4A5D23;">卡片背景</div>
+                        <div class="preview-content" style="color: #4A5D23;">
+                            这是卡片内容区域，显示文字的可读性
+                        </div>
+                        <button class="preview-button" style="background: #A8C69F;">主要按钮</button>
+                        <div class="preview-tags">
+                            <span class="tag" style="background: #8FB339; color: white;">标签 1</span>
+                            <span class="tag" style="background: #A8C69F; color: white;">标签 2</span>
+                        </div>
+                    </div>
+                    <div class="preview-stats">
+                        <div class="stat-item" style="background: #A8C69F; color: white;">
+                            <div class="stat-number">23</div>
+                            <div class="stat-label">点赞</div>
+                        </div>
+                        <div class="stat-item" style="background: #8FB339; color: white;">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">评论</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-apply" style="background: #A8C69F; color: white;" onclick="selectScheme(5)">选择此方案</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const schemes = {
+            1: {
+                name: '清新薄荷',
+                colors: ['#4ECDC4', '#44A08D', '#F7FFF7', '#F0F7F4', '#2D5F4C']
+            },
+            2: {
+                name: '莫兰迪薄荷',
+                colors: ['#88B3C8', '#6B9080', '#EAF4F4', '#F6FFF8', '#355070']
+            },
+            3: {
+                name: '翡翠薄荷',
+                colors: ['#7FB069', '#6B8E23', '#FAF9F6', '#F8F9FA', '#2F4F4F']
+            },
+            4: {
+                name: '冰川薄荷',
+                colors: ['#98DDCA', '#7EC8B5', '#E8F4F8', '#F0F4F8', '#1A535C']
+            },
+            5: {
+                name: '抹茶薄荷',
+                colors: ['#A8C69F', '#8FB339', '#FFFBF0', '#F9F7F2', '#4A5D23']
+            }
+        };
+
+        let selectedScheme = null;
+
+        function selectScheme(number) {
+            selectedScheme = number;
+            const scheme = schemes[number];
+            
+            document.getElementById('currentSelection').style.display = 'block';
+            document.getElementById('selectionName').textContent = `方案${number}: ${scheme.name}`;
+            document.getElementById('selectionColors').innerHTML = scheme.colors
+                .map(color => `<div class="selection-swatch" style="background: ${color};"></div>`)
+                .join('');
+            
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function applyToMain() {
+            if (!selectedScheme) return;
+            
+            // 这里可以集成到主网站
+            alert(`已选择方案${selectedScheme}: ${schemes[selectedScheme].name}\n\n接下来我会将这个配色应用到 h5-index.html 文件中`);
+        }
+
+        // 添加点击卡片高亮效果
+        document.querySelectorAll('.scheme-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.tagName !== 'BUTTON') {
+                    const schemeNum = this.getAttribute('data-scheme');
+                    selectScheme(schemeNum);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
