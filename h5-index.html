@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>花鸟鱼虫 - 记录与花鸟鱼虫的美好时光</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #4CAF50;
+            --light-green: #8BC34A;
+            --dark-green: #388E3C;
+            --primary-blue: #2196F3;
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-hint: #999999;
+            --border-color: #e0e0e0;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        #app {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--bg-color);
+            min-height: 100vh;
+        }
+
+        /* 头部导航 */
+        .header {
+            background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+            color: white;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* 底部导航栏 */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            display: flex;
+            border-top: 1px solid var(--border-color);
+            padding: 8px 0;
+            z-index: 100;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 0;
+            color: var(--text-hint);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-item.active {
+            color: var(--primary-green);
+        }
+
+        .tab-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .tab-text {
+            font-size: 12px;
+        }
+
+        /* 页面内容 */
+        .page {
+            padding: 16px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        /* 用户卡片 */
+        .user-card {
+            background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .nickname {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .bio {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: flex;
+            gap: 24px;
+            margin-top: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px;
+            border-radius: 12px;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* 快捷操作 */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 8px;
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .action-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* 植宠卡片 */
+        .pet-card {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .pet-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .pet-info {
+            flex: 1;
+        }
+
+        .pet-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .pet-meta {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--primary-green);
+            border-radius: 16px;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+
+        /* 任务卡片 */
+        .task-card {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .task-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background: rgba(76, 175, 80, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .task-info {
+            flex: 1;
+        }
+
+        .task-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .task-meta {
+            font-size: 13px;
+            color: var(--text-hint);
+        }
+
+        /* 动态卡片 */
+        .post-card {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+        }
+
+        .post-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .post-user {
+            flex: 1;
+        }
+
+        .post-username {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .post-time {
+            font-size: 12px;
+            color: var(--text-hint);
+        }
+
+        .post-content {
+            padding: 0 16px 16px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .post-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 0 16px 16px;
+        }
+
+        .post-image-item {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            cursor: pointer;
+        }
+
+        .post-footer {
+            display: flex;
+            border-top: 1px solid var(--border-color);
+            padding: 12px 16px;
+            gap: 24px;
+        }
+
+        .post-action {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .post-action:hover {
+            color: var(--primary-green);
+        }
+
+        .post-action.liked {
+            color: #F44336;
+        }
+
+        /* 分类标签 */
+        .category-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 12px 0;
+            margin-bottom: 16px;
+        }
+
+        .category-item {
+            padding: 8px 20px;
+            background: white;
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-item.active {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-hint);
+        }
+
+        .empty-icon {
+            font-size: 80px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-text {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .empty-desc {
+            font-size: 14px;
+        }
+
+        /* 按钮 */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 12px 32px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-fab {
+            position: fixed;
+            right: 20px;
+            bottom: 100px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+            color: white;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(76, 175, 80, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99;
+        }
+
+        /* 模态框 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-item {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        /* 时间线 */
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -20px;
+            top: 0;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-green);
+            border: 3px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        /* 标签页 */
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        /* 响应式 */
+        @media (max-width: 480px) {
+            .header {
+                padding: 16px;
+            }
+
+            .header-title {
+                font-size: 20px;
+            }
+
+            .page {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- 头部 -->
+        <div class="header">
+            <div class="header-title">
+                <i class="fas fa-seedling"></i> 花鸟鱼虫
+            </div>
+        </div>
+
+        <!-- 页面内容 -->
+        <div class="page">
+            <!-- 公园广场页面 -->
+            <div v-if="currentTab === 'square'" class="square-page">
+                <!-- 分类筛选 -->
+                <div class="category-scroll">
+                    <div 
+                        class="category-item" 
+                        :class="{ active: currentCategory === 'all' }"
+                        @click="currentCategory = 'all'"
+                    >
+                        全部
+                    </div>
+                    <div 
+                        class="category-item"
+                        v-for="cat in categories" 
+                        :key="cat.value"
+                        :class="{ active: currentCategory === cat.value }"
+                        @click="currentCategory = cat.value"
+                    >
+                        {{ cat.label }}
+                    </div>
+                </div>
+
+                <!-- 动态列表 -->
+                <div class="posts-list">
+                    <div class="card post-card" v-for="post in filteredPosts" :key="post.id">
+                        <div class="post-header">
+                            <div class="post-avatar">{{ post.userAvatar }}</div>
+                            <div class="post-user">
+                                <div class="post-username">{{ post.userName }}</div>
+                                <div class="post-time">{{ post.time }}</div>
+                            </div>
+                        </div>
+                        <div class="post-content" v-if="post.content">
+                            {{ post.content }}
+                        </div>
+                        <div class="post-images" v-if="post.images && post.images.length > 0">
+                            <div class="post-image-item" v-for="(img, idx) in post.images" :key="idx">
+                                {{ img }}
+                            </div>
+                        </div>
+                        <div class="post-footer">
+                            <div class="post-action" :class="{ liked: post.isLiked }" @click="toggleLike(post)">
+                                <i :class="post.isLiked ? 'fas fa-heart' : 'far fa-heart'"></i>
+                                <span>{{ post.likeCount }}</span>
+                            </div>
+                            <div class="post-action">
+                                <i class="far fa-comment"></i>
+                                <span>{{ post.commentCount }}</span>
+                            </div>
+                            <div class="post-action">
+                                <i class="far fa-eye"></i>
+                                <span>{{ post.viewCount }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="empty-state" v-if="filteredPosts.length === 0">
+                        <div class="empty-icon"><i class="far fa-images"></i></div>
+                        <div class="empty-text">暂无动态</div>
+                        <div class="empty-desc">成为第一个分享的人吧</div>
+                    </div>
+                </div>
+
+                <!-- 发布按钮 -->
+                <button class="btn-fab" @click="showPublishModal = true">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+            <!-- 我的空间页面 -->
+            <div v-if="currentTab === 'space'" class="space-page">
+                <!-- 用户信息卡片 -->
+                <div class="card user-card">
+                    <div class="user-info">
+                        <div class="avatar">👤</div>
+                        <div class="user-details">
+                            <div class="nickname">{{ userInfo.nickname }}</div>
+                            <div class="bio">{{ userInfo.bio }}</div>
+                            <div class="stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">{{ stats.petCount }}</div>
+                                    <div class="stat-label">植宠</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">{{ stats.taskCount }}</div>
+                                    <div class="stat-label">任务</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">{{ stats.postCount }}</div>
+                                    <div class="stat-label">动态</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 快捷操作 -->
+                <div class="card">
+                    <div class="quick-actions">
+                        <div class="action-item" @click="showAddPetModal = true">
+                            <div class="action-icon">🌱</div>
+                            <div class="action-text">添加植宠</div>
+                        </div>
+                        <div class="action-item" @click="showAddTaskModal = true">
+                            <div class="action-icon">⏰</div>
+                            <div class="action-text">创建任务</div>
+                        </div>
+                        <div class="action-item" @click="showPublishModal = true">
+                            <div class="action-icon">📤</div>
+                            <div class="action-text">发布动态</div>
+                        </div>
+                        <div class="action-item">
+                            <div class="action-icon">🔔</div>
+                            <div class="action-text">提醒</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 我的植宠 -->
+                <div class="card">
+                    <h3 style="margin-bottom: 16px; font-size: 18px;">我的植宠</h3>
+                    <div class="pet-list">
+                        <div class="pet-card" v-for="pet in pets" :key="pet.id" style="margin-bottom: 16px; padding: 12px; background: var(--bg-color); border-radius: 12px;">
+                            <div class="pet-image">{{ pet.icon }}</div>
+                            <div class="pet-info">
+                                <div class="pet-name">{{ pet.name }}</div>
+                                <div class="pet-meta">
+                                    <span class="tag">{{ pet.type }}</span>
+                                    <span>陪伴 {{ pet.duration }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="empty-state" v-if="pets.length === 0">
+                            <div class="empty-icon">🪴</div>
+                            <div class="empty-text">还没有植宠</div>
+                            <button class="btn-primary" style="margin-top: 16px;" @click="showAddPetModal = true">添加植宠</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 最近任务 -->
+                <div class="card">
+                    <h3 style="margin-bottom: 16px; font-size: 18px;">最近任务</h3>
+                    <div class="task-list">
+                        <div class="task-card" v-for="task in tasks" :key="task.id" style="margin-bottom: 16px; padding: 12px; background: var(--bg-color); border-radius: 12px;">
+                            <div class="task-icon-wrapper">{{ task.icon }}</div>
+                            <div class="task-info">
+                                <div class="task-title">{{ task.title }}</div>
+                                <div class="task-meta">{{ task.petName }} • {{ task.time }}</div>
+                            </div>
+                            <input type="checkbox" :checked="task.completed" style="width: 20px; height: 20px;" @change="toggleTask(task)">
+                        </div>
+                        <div class="empty-state" v-if="tasks.length === 0">
+                            <div class="empty-icon">✅</div>
+                            <div class="empty-text">暂无待办任务</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部导航栏 -->
+        <div class="tab-bar">
+            <div class="tab-item" :class="{ active: currentTab === 'square' }" @click="currentTab = 'square'">
+                <div class="tab-icon"><i class="fas fa-home"></i></div>
+                <div class="tab-text">公园广场</div>
+            </div>
+            <div class="tab-item" :class="{ active: currentTab === 'space' }" @click="currentTab = 'space'">
+                <div class="tab-icon"><i class="fas fa-user"></i></div>
+                <div class="tab-text">我的空间</div>
+            </div>
+        </div>
+
+        <!-- 添加植宠弹窗 -->
+        <div class="modal-overlay" v-if="showAddPetModal" @click="showAddPetModal = false">
+            <div class="modal" @click.stop>
+                <div class="modal-title">添加植宠</div>
+                <div class="form-item">
+                    <label class="form-label">名称</label>
+                    <input class="form-input" v-model="newPet.name" placeholder="给你的植宠起个名字">
+                </div>
+                <div class="form-item">
+                    <label class="form-label">类型</label>
+                    <select class="form-input" v-model="newPet.type">
+                        <option value="植物">植物</option>
+                        <option value="花卉">花卉</option>
+                        <option value="树木">树木</option>
+                        <option value="鱼类">鱼类</option>
+                        <option value="龟类">龟类</option>
+                        <option value="鸟类">鸟类</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <button class="btn-primary" style="width: 100%; margin-top: 16px;" @click="addPet">保存</button>
+            </div>
+        </div>
+
+        <!-- 创建任务弹窗 -->
+        <div class="modal-overlay" v-if="showAddTaskModal" @click="showAddTaskModal = false">
+            <div class="modal" @click.stop>
+                <div class="modal-title">创建任务</div>
+                <div class="form-item">
+                    <label class="form-label">任务标题</label>
+                    <input class="form-input" v-model="newTask.title" placeholder="例如：给小花浇水">
+                </div>
+                <div class="form-item">
+                    <label class="form-label">任务类型</label>
+                    <select class="form-input" v-model="newTask.type">
+                        <option value="浇水">💧 浇水</option>
+                        <option value="喂食">🍖 喂食</option>
+                        <option value="晒背">☀️ 晒背</option>
+                        <option value="修剪">✂️ 修剪</option>
+                        <option value="清洁">🧹 清洁</option>
+                    </select>
+                </div>
+                <button class="btn-primary" style="width: 100%; margin-top: 16px;" @click="addTask">保存</button>
+            </div>
+        </div>
+
+        <!-- 发布动态弹窗 -->
+        <div class="modal-overlay" v-if="showPublishModal" @click="showPublishModal = false">
+            <div class="modal" @click.stop>
+                <div class="modal-title">发布动态</div>
+                <div class="form-item">
+                    <label class="form-label">内容</label>
+                    <textarea class="form-input" v-model="newPost.content" rows="4" placeholder="分享你的植宠故事..."></textarea>
+                </div>
+                <button class="btn-primary" style="width: 100%; margin-top: 16px;" @click="publishPost">发布</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    currentTab: 'square',
+                    currentCategory: 'all',
+                    categories: [
+                        { value: 'plant', label: '植物' },
+                        { value: 'flower', label: '花卉' },
+                        { value: 'fish', label: '鱼类' },
+                        { value: 'turtle', label: '龟类' },
+                        { value: 'bird', label: '鸟类' }
+                    ],
+                    userInfo: {
+                        nickname: '花鸟鱼虫用户',
+                        bio: '记录与花鸟鱼虫的美好时光'
+                    },
+                    stats: {
+                        petCount: 3,
+                        taskCount: 5,
+                        postCount: 12
+                    },
+                    pets: [
+                        { id: 1, name: '小绿', type: '植物', icon: '🌱', duration: '30 天' },
+                        { id: 2, name: '花花', type: '花卉', icon: '🌸', duration: '15 天' },
+                        { id: 3, name: '小鱼', type: '鱼类', icon: '🐟', duration: '2 个月' }
+                    ],
+                    tasks: [
+                        { id: 1, title: '给小绿浇水', petName: '小绿', time: '09:00', icon: '💧', completed: false },
+                        { id: 2, title: '喂小鱼', petName: '小鱼', time: '18:00', icon: '🍖', completed: false },
+                        { id: 3, title: '给花花施肥', petName: '花花', time: '10:00', icon: '💧', completed: true }
+                    ],
+                    posts: [
+                        { 
+                            id: 1, 
+                            userName: '花友张三', 
+                            userAvatar: '👨', 
+                            content: '今天我的小花开花了，好开心！🌸', 
+                            images: ['🌸', '🌺', '🌻'], 
+                            likeCount: 23, 
+                            commentCount: 5, 
+                            viewCount: 156,
+                            isLiked: false,
+                            time: '10 分钟前'
+                        },
+                        { 
+                            id: 2, 
+                            userName: '鱼友李四', 
+                            userAvatar: '👩', 
+                            content: '我家小鱼今天特别活跃', 
+                            images: ['🐟'], 
+                            likeCount: 15, 
+                            commentCount: 3, 
+                            viewCount: 89,
+                            isLiked: true,
+                            time: '1 小时前'
+                        }
+                    ],
+                    newPet: { name: '', type: '植物' },
+                    newTask: { title: '', type: '浇水' },
+                    newPost: { content: '' },
+                    showAddPetModal: false,
+                    showAddTaskModal: false,
+                    showPublishModal: false
+                };
+            },
+            computed: {
+                filteredPosts() {
+                    if (this.currentCategory === 'all') {
+                        return this.posts;
+                    }
+                    return this.posts;
+                }
+            },
+            methods: {
+                toggleLike(post) {
+                    post.isLiked = !post.isLiked;
+                    post.likeCount += post.isLiked ? 1 : -1;
+                },
+                toggleTask(task) {
+                    task.completed = !task.completed;
+                },
+                addPet() {
+                    if (this.newPet.name.trim()) {
+                        const icons = { '植物': '🌱', '花卉': '🌸', '树木': '🌲', '鱼类': '🐟', '龟类': '🐢', '鸟类': '🐦', '其他': '🐾' };
+                        this.pets.unshift({
+                            id: Date.now(),
+                            name: this.newPet.name,
+                            type: this.newPet.type,
+                            icon: icons[this.newPet.type] || '🌱',
+                            duration: '今天'
+                        });
+                        this.stats.petCount++;
+                        this.newPet = { name: '', type: '植物' };
+                        this.showAddPetModal = false;
+                    }
+                },
+                addTask() {
+                    if (this.newTask.title.trim()) {
+                        this.tasks.unshift({
+                            id: Date.now(),
+                            title: this.newTask.title,
+                            petName: '小绿',
+                            time: '09:00',
+                            icon: this.newTask.type === '浇水' ? '💧' : '🍖',
+                            completed: false
+                        });
+                        this.stats.taskCount++;
+                        this.newTask = { title: '', type: '浇水' };
+                        this.showAddTaskModal = false;
+                    }
+                },
+                publishPost() {
+                    if (this.newPost.content.trim()) {
+                        this.posts.unshift({
+                            id: Date.now(),
+                            userName: this.userInfo.nickname,
+                            userAvatar: '👤',
+                            content: this.newPost.content,
+                            images: [],
+                            likeCount: 0,
+                            commentCount: 0,
+                            viewCount: 0,
+                            isLiked: false,
+                            time: '刚刚'
+                        });
+                        this.stats.postCount++;
+                        this.newPost = { content: '' };
+                        this.showPublishModal = false;
+                    }
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
